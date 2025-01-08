@@ -28,15 +28,60 @@ const show = (req, res) => {
 }
 
 const store = (req, res) => {
-  res.send('Aggiungo un nuovo partecipante')
+
+  const id = partecipanti.at(-1).id + 1;
+
+  const newPartecipant = {
+    id,
+    ...req.body
+  }
+
+  partecipanti.push(newPartecipant);
+  
+  res.status(201);
+  res.json(partecipanti);
 }
 
 const update = (req, res) => {
-  res.send("Modifico il partecipante con id" + req.params.id)
+  const id = req.params.id;
+  const partecipant = partecipanti.find(partecipant => partecipant.id == id);
+
+  if(!partecipant){
+    res.status(404)
+    return res.json({
+      message: 'Partecipante non trovato',
+      status: 404,
+      error: 'Not Found'
+    })
+  };
+
+  for (let key in req.body){
+    partecipant[key] = req.body[key]
+  }
+
+  
+  res.json(partecipant);
 }
 
 const modify = (req, res) => {
-  res.send("Modifica parziale del partecipante con id" + req.params.id)
+  const id = req.params.id;
+  const partecipant = partecipanti.find(partecipant => partecipant.id == id);
+
+  if(!partecipant){
+    res.status(404)
+    return res.json({
+      message: 'Partecipante non trovato',
+      status: 404,
+      error: 'Not Found'
+    })
+  };
+
+  for (let key in req.body){
+    partecipant[key] = req.body[key]
+  }
+
+  
+  res.json(partecipant);
 }
 
 const destroy = (req, res) => {
